@@ -11,12 +11,18 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
 @Slf4j
 public class TodoService {
 
-    private final TodoRepository todoRepository;
+    private TodoRepository todoRepository;
+
+    public TodoService(TodoRepository todoRepository) {
+        this.todoRepository = todoRepository;
+    }
+
+    public TodoService() {
+    }
 
     public ResponseEntity<List<Todo>> getAllTodos() {
         try {

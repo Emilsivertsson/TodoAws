@@ -1,11 +1,13 @@
 package org.codeforpizza.todoaws.service;
 
 import org.codeforpizza.todoaws.models.Todo;
+import org.codeforpizza.todoaws.repository.TodoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import java.util.Arrays;
@@ -16,8 +18,11 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 class TodoServiceTest {
 
-    @Mock
+    @Autowired
     private TodoService todoService;
+
+    @Mock
+    private TodoRepository todoRepository;
 
     Todo todo1 = new Todo(1L,"First title", "First description", false);
     Todo todo2 = new Todo(2L,"Second title", "Second description", true);
@@ -30,17 +35,15 @@ class TodoServiceTest {
     @BeforeEach
     void setUp() {
         todoService = Mockito.mock(TodoService.class);
-
-
+        todoRepository = Mockito.mock(TodoRepository.class);
     }
-
 
     @Test
     @DisplayName("1.Get all todos")
     void getAllTodos() {
         List<Todo> todos = Arrays.asList(todo1, todo2, todo3, todo4, todo5);
 
-        when(todoService.getAllTodos()).thenReturn(ResponseEntity.ok(todos));
+        Mockito.when(todoService.getAllTodos()).thenReturn(ResponseEntity.ok(todos));
         ResponseEntity<List<Todo>> response = todoService.getAllTodos();
 
         assertEquals(5, response.getBody().size());
