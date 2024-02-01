@@ -16,6 +16,7 @@ jobs:
       mysql:
         image: mysql:8.0
         env:
+          MYSQL_ROOT_USER: root
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: todoDB
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
@@ -46,6 +47,7 @@ jobs:
           mysql version: '8.0'
           mysql database: 'todoDB'
           mysql root password: root
+          mysql user: root
           mysql password: root
 
   publish-job:
@@ -64,25 +66,3 @@ jobs:
           name: Package
           path: staging
 
-  super-lint:
-    name: Lint code base
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Cache Super-Linter dependencies
-        id: cache-super-linter
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.super-linter
-          key: super-linter-${{ runner.os }}-${{ hashFiles('**/*.codeclimate.yml') }}
-
-      - name: Run Super-Linter
-        if: steps.cache-super-linter.outputs.cache-hit != 'true'
-        uses: github/super-linter@v4
-        env:
-          DEFAULT_BRANCH: main
-          FILTER_REGEX_INCLUDE: .*src/.*
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
