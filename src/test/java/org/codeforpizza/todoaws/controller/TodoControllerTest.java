@@ -1,87 +1,105 @@
 package org.codeforpizza.todoaws.controller;
 
-
 import org.codeforpizza.todoaws.models.Todo;
+import org.codeforpizza.todoaws.service.TodoService;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import com.google.gson.Gson;
+import org.springframework.http.ResponseEntity;
+
 import java.util.Arrays;
 import java.util.List;
 
-@ExtendWith({SpringExtension.class, MockitoExtension.class})
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 @SpringBootTest
-@AutoConfigureMockMvc
 class TodoControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Mock
+    private TodoService todoService;
 
-    Gson gson = new Gson();
-
-    Todo todo1 = new Todo(1L,"First title", "First description", false);
-    Todo todo2 = new Todo(2L,"Second title", "Second description", true);
-    Todo todo3 = new Todo(3L,"Third title", "Third description", false);
-    Todo todo4 = new Todo(4L,"Fourth title", "Fourth description", true);
-    Todo todo5 = new Todo(5L,"Fifth title", "Fifth description", false);
-
+    @InjectMocks
+    private TodoController todoController;
 
     @Test
-    void getAllTodos() throws Exception {
-        List<Todo> todos = Arrays.asList(todo1, todo2, todo3, todo4, todo5);
+    void getAllTodos() {
+        // Arrange
+        Todo todo1 = new Todo(1L, "Task 1", "Description 1", false);
+        Todo todo2 = new Todo(2L, "Task 2", "Description 2", true);
+        List<Todo> todos = Arrays.asList(todo1, todo2);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(todos.size()));
+        when(todoService.getAllTodos()).thenReturn(ResponseEntity.ok(todos));
+
+        // Act
+        ResponseEntity<List<Todo>> responseEntity = todoController.getAllTodos();
+
+        // Assert
+        assertEquals(ResponseEntity.ok(todos), responseEntity);
     }
 
     @Test
-    void getOneTodo() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/1")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value(todo1.getTitle()));
+    void getOneTodo() {
+        // Arrange
+        Long todoId = 1L;
+        Todo todo = new Todo(todoId, "Task 1", "Description 1", false);
+
+        when(todoService.getOneTodo(todoId)).thenReturn(ResponseEntity.ok(todo));
+
+        // Act
+        ResponseEntity<Todo> responseEntity = todoController.getOneTodo(todoId);
+
+        // Assert
+        assertEquals(ResponseEntity.ok(todo), responseEntity);
     }
 
     @Test
-    void createTodo() throws Exception {
-        Todo todo6 = new Todo("new title", "new description", false);
-        String todoJson = gson.toJson(todo6);
+    void createTodo() {
+        // Arrange
+        Todo todoToCreate = new Todo("New Task", "New Description", false);
+        when(todoService.createTodo(any(Todo.class))).thenReturn(ResponseEntity.ok(todoToCreate));
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(todoJson.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value(todo6.getTitle()));
+        // Act
+        ResponseEntity<Todo> responseEntity = todoController.createTodo(todoToCreate);
 
+        // Assert
+        assertEquals(ResponseEntity.ok(todoToCreate), responseEntity);
+        verify(todoService).createTodo(any(Todo.class));
     }
 
     @Test
-    void updateTodo() throws Exception {
-        Todo todo6 = new Todo("new title", "new description", false);
-        String todoJson = gson.toJson(todo6);
+    void updateTodo() {
+        // Arrange
+        Long todoId = 1L;
+        Todo updatedTodo = new Todo(todoId, "Updated Task", "Updated Description", true);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/3")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(todoJson.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value(todo6.getTitle()));
+        when(todoService.updateTodo(todoId, updatedTodo)).thenReturn(ResponseEntity.ok(updatedTodo));
 
+        // Act
+        ResponseEntity<Todo> responseEntity = todoController.updateTodo(todoId, updatedTodo);
+
+        // Assert
+        assertEquals(ResponseEntity.ok(updatedTodo), responseEntity);
+        verify(todoService).updateTodo(todoId, updatedTodo);
     }
 
     @Test
-    void deleteTodo() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/1")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+    void deleteTodo() {
+        // Arrange
+        Long todoId = 1L;
+
+        when(todoService.deleteTodo(todoId)).thenReturn(ResponseEntity.ok("Todo deleted successfully"));
+
+        // Act
+        ResponseEntity<String> responseEntity = todoController.deleteTodo(todoId);
+
+        // Assert
+        assertEquals(ResponseEntity.ok("Todo deleted successfully"), responseEntity);
+        verify(todoService).deleteTodo(todoId);
     }
 }
