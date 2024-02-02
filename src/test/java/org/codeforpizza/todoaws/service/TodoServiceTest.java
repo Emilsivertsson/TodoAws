@@ -3,12 +3,16 @@ package org.codeforpizza.todoaws.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import java.util.List;
 
 import org.codeforpizza.todoaws.models.Todo;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
@@ -70,6 +74,30 @@ class TodoServiceTest {
     }
 
     /**
+     * Method under test: {@link TodoService#updateTodo(Long, Todo)}
+     */
+    @Test
+    void testUpdateTodo2() {
+        Todo todo = mock(Todo.class);
+        doNothing().when(todo).setCompleted(Mockito.<Boolean>any());
+        doNothing().when(todo).setDescription(Mockito.<String>any());
+        doNothing().when(todo).setId(Mockito.<Long>any());
+        doNothing().when(todo).setTitle(Mockito.<String>any());
+        todo.setCompleted(true);
+        todo.setDescription("The characteristics of someone or something");
+        todo.setId(1L);
+        todo.setTitle("Dr");
+        ResponseEntity<Todo> actualUpdateTodoResult = todoService.updateTodo(1L, todo);
+        verify(todo).setCompleted(Mockito.<Boolean>any());
+        verify(todo).setDescription(Mockito.<String>any());
+        verify(todo).setId(Mockito.<Long>any());
+        verify(todo).setTitle(Mockito.<String>any());
+        assertNull(actualUpdateTodoResult.getBody());
+        assertEquals(400, actualUpdateTodoResult.getStatusCodeValue());
+        assertTrue(actualUpdateTodoResult.getHeaders().isEmpty());
+    }
+
+    /**
      * Method under test: {@link TodoService#createTodo(Todo)}
      */
     @Test
@@ -80,6 +108,30 @@ class TodoServiceTest {
         todo.setId(1L);
         todo.setTitle("Dr");
         ResponseEntity<Todo> actualCreateTodoResult = todoService.createTodo(todo);
+        assertNull(actualCreateTodoResult.getBody());
+        assertEquals(400, actualCreateTodoResult.getStatusCodeValue());
+        assertTrue(actualCreateTodoResult.getHeaders().isEmpty());
+    }
+
+    /**
+     * Method under test: {@link TodoService#createTodo(Todo)}
+     */
+    @Test
+    void testCreateTodo2() {
+        Todo todo = mock(Todo.class);
+        doNothing().when(todo).setCompleted(Mockito.<Boolean>any());
+        doNothing().when(todo).setDescription(Mockito.<String>any());
+        doNothing().when(todo).setId(Mockito.<Long>any());
+        doNothing().when(todo).setTitle(Mockito.<String>any());
+        todo.setCompleted(true);
+        todo.setDescription("The characteristics of someone or something");
+        todo.setId(1L);
+        todo.setTitle("Dr");
+        ResponseEntity<Todo> actualCreateTodoResult = todoService.createTodo(todo);
+        verify(todo).setCompleted(Mockito.<Boolean>any());
+        verify(todo).setDescription(Mockito.<String>any());
+        verify(todo).setId(Mockito.<Long>any());
+        verify(todo).setTitle(Mockito.<String>any());
         assertNull(actualCreateTodoResult.getBody());
         assertEquals(400, actualCreateTodoResult.getStatusCodeValue());
         assertTrue(actualCreateTodoResult.getHeaders().isEmpty());
