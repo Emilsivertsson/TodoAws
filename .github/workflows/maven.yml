@@ -19,7 +19,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build with Maven
-        run: mvn -B package --file pom.xml
+        run: mvn verify --file pom.xml
 
       #- name: login to dockerhub
       #  uses: docker/login-action@v2
