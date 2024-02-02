@@ -10,19 +10,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    needs: mysql-setup
-
-    services:
-      mysql:
-        image: mysql:8.0
-        ports:
-          - 3306:3306
-        env:
-          MYSQL_ROOT_USER: root
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: todoDB
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -34,31 +21,18 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
 
-      - name: login to dockerhub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      #- name: login to dockerhub
+      #  uses: docker/login-action@v2
+      #  with:
+      #    username: ${{ secrets.DOCKERHUB_USERNAME }}
+      #    password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push the Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: true
-          tags: wexio/todoaws:latest
+      #- name: Build and push the Docker image
+      #  uses: docker/build-push-action@v4
+      #  with:
+      #    context: .
+      #    push: true
+      #    tags: wexio/todoaws:latest
 
-  mysql-setup:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set up MySQL
-        uses: mirromutth/mysql-action@v1.1
-        with:
-          host port: 3306
-          container port: 3306
-          mysql version: '8.0'
-          mysql database: 'todoDB'
-          mysql root password: root
-          mysql user: root
-          mysql password: root
 
 
