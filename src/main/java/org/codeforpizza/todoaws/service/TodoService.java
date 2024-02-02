@@ -13,16 +13,10 @@ import java.util.List;
 @Service
 @Transactional
 @Slf4j
+@RequiredArgsConstructor
 public class TodoService {
 
-    private TodoRepository todoRepository;
-
-    public TodoService(TodoRepository todoRepository) {
-        this.todoRepository = todoRepository;
-    }
-
-    public TodoService() {
-    }
+    private final TodoRepository todoRepository;
 
     public ResponseEntity<List<Todo>> getAllTodos() {
         try {
