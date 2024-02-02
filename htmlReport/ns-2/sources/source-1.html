@@ -1,0 +1,213 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1252"> 
+  <title>Coverage Report > TodoService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.codeforpizza.todoaws.service</a>
+</div>
+
+<h1>Coverage Summary for Class: TodoService (org.codeforpizza.todoaws.service)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TodoService</td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (2/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    4,4%
+  </span>
+  <span class="absValue">
+    (2/45)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">TodoService$$SpringCGLIB$$0</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (2/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    4,4%
+  </span>
+  <span class="absValue">
+    (2/45)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.codeforpizza.todoaws.service;
+&nbsp;
+&nbsp;import jakarta.transaction.Transactional;
+&nbsp;import lombok.RequiredArgsConstructor;
+&nbsp;import lombok.extern.slf4j.Slf4j;
+&nbsp;import org.codeforpizza.todoaws.models.Todo;
+&nbsp;import org.codeforpizza.todoaws.repository.TodoRepository;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Service
+&nbsp;@Transactional
+<b class="fc">&nbsp;@Slf4j</b>
+&nbsp;public class TodoService {
+&nbsp;
+&nbsp;    private TodoRepository todoRepository;
+&nbsp;
+<b class="nc">&nbsp;    public TodoService(TodoRepository todoRepository) {</b>
+<b class="nc">&nbsp;        this.todoRepository = todoRepository;</b>
+&nbsp;    }
+&nbsp;
+<b class="fc">&nbsp;    public TodoService() {</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public ResponseEntity&lt;List&lt;Todo&gt;&gt; getAllTodos() {
+&nbsp;        try {
+<b class="nc">&nbsp;            List&lt;Todo&gt; todos = todoRepository.findAll();</b>
+<b class="nc">&nbsp;            if (todos.isEmpty()) {</b>
+<b class="nc">&nbsp;                log.info(&quot;No todos found&quot;);</b>
+<b class="nc">&nbsp;                return ResponseEntity.noContent().build();</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                log.info(&quot;Todos found&quot;);</b>
+<b class="nc">&nbsp;                return ResponseEntity.ok(todos);</b>
+&nbsp;            }
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            log.info(&quot;Error getting todos&quot;);</b>
+<b class="nc">&nbsp;            return ResponseEntity.status(400).build();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public ResponseEntity&lt;Todo&gt; getOneTodo(Long id) {
+&nbsp;        try {
+<b class="nc">&nbsp;            if (todoRepository.existsById(id)) {</b>
+<b class="nc">&nbsp;                log.info(&quot;Todo found&quot;);</b>
+<b class="nc">&nbsp;                Todo todo = todoRepository.findById(id).get();</b>
+<b class="nc">&nbsp;                return ResponseEntity.ok(todo);</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                log.info(&quot;Todo not found&quot;);</b>
+<b class="nc">&nbsp;                return ResponseEntity.notFound().build();</b>
+&nbsp;            }
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            log.info(&quot;Error getting todo&quot;);</b>
+<b class="nc">&nbsp;            return ResponseEntity.status(400).build();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public ResponseEntity&lt;String&gt; deleteTodo(Long id) {
+&nbsp;        try {
+<b class="nc">&nbsp;            if (todoRepository.existsById(id)) {</b>
+<b class="nc">&nbsp;                todoRepository.deleteById(id);</b>
+<b class="nc">&nbsp;                log.info(&quot;Todo deleted successfully&quot;);</b>
+<b class="nc">&nbsp;                return ResponseEntity.ok(&quot;Todo deleted successfully&quot;);</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                log.info(&quot;Todo not found&quot;);</b>
+<b class="nc">&nbsp;                return ResponseEntity.status(404).body(&quot;Todo not found&quot;);</b>
+&nbsp;            }
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            log.info(&quot;Error deleting todo&quot;);</b>
+<b class="nc">&nbsp;            return ResponseEntity.status(400).build();</b>
+&nbsp;        }
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    public ResponseEntity&lt;Todo&gt; updateTodo(Long id, Todo todo) {
+&nbsp;        try {
+<b class="nc">&nbsp;            Todo todoToUpdate = todoRepository.findById(id).orElseThrow(() -&gt; new RuntimeException(&quot;Todo not found&quot;));</b>
+<b class="nc">&nbsp;            todoToUpdate.setTitle(todo.getTitle());</b>
+<b class="nc">&nbsp;            todoToUpdate.setDescription(todo.getDescription());</b>
+<b class="nc">&nbsp;            todoToUpdate.setCompleted(todo.getCompleted());</b>
+<b class="nc">&nbsp;            log.info(&quot;Todo updated successfully&quot;);</b>
+<b class="nc">&nbsp;            return ResponseEntity.ok(todoRepository.save(todoToUpdate));</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            log.info(&quot;Error updating todo&quot;);</b>
+<b class="nc">&nbsp;            return ResponseEntity.status(400).build();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public ResponseEntity&lt;Todo&gt; createTodo(Todo todo) {
+&nbsp;        try {
+<b class="nc">&nbsp;            log.info(&quot;Todo created successfully&quot;);</b>
+<b class="nc">&nbsp;            return ResponseEntity.ok(todoRepository.save(todo));</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            log.info(&quot;Error creating todo&quot;);</b>
+<b class="nc">&nbsp;            return ResponseEntity.status(400).build();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-02-01 22:16</div>
+</div>
+</body>
+</html>
