@@ -1,133 +1,87 @@
 package org.codeforpizza.todoaws.controller;
 
-import static org.mockito.Mockito.when;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.codeforpizza.todoaws.models.Todo;
-import org.codeforpizza.todoaws.service.TodoService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import com.google.gson.Gson;
+import java.util.Arrays;
+import java.util.List;
 
-@ContextConfiguration(classes = {TodoController.class})
-@ExtendWith(SpringExtension.class)
+@ExtendWith({SpringExtension.class, MockitoExtension.class})
+@SpringBootTest
+@AutoConfigureMockMvc
 class TodoControllerTest {
+
+
     @Autowired
-    private TodoController todoController;
+    private MockMvc mockMvc;
 
-    @MockBean
-    private TodoService todoService;
+    Gson gson = new Gson();
 
-    /**
-     * Method under test: {@link TodoController#getAllTodos()}
-     */
+    Todo todo1 = new Todo(1L, "First title", "First description", false);
+    Todo todo2 = new Todo(2L, "Second title", "Second description", true);
+    Todo todo3 = new Todo(3L, "Third title", "Third description", false);
+    Todo todo4 = new Todo(4L, "Fourth title", "Fourth description", true);
+    Todo todo5 = new Todo(5L, "Fifth title", "Fifth description", false);
+
+
     @Test
-    void testGetAllTodos() throws Exception {
-        when(todoService.getAllTodos()).thenReturn(null);
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/");
-        MockMvcBuilders.standaloneSetup(todoController)
-                .build()
-                .perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isOk());
+    void getAllTodos() throws Exception {
+        List<Todo> todos = Arrays.asList(todo1, todo2, todo3, todo4, todo5);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(todos.size()));
     }
 
-    /**
-     * Method under test: {@link TodoController#getOneTodo(Long)}
-     */
     @Test
-    void testGetOneTodo() throws Exception {
-        when(todoService.getOneTodo(Mockito.<Long>any())).thenReturn(null);
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/{id}", 1L);
-        MockMvcBuilders.standaloneSetup(todoController)
-                .build()
-                .perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isOk());
+    void getOneTodo() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value(todo1.getTitle()));
     }
 
-    /**
-     * Method under test: {@link TodoController#createTodo(Todo)}
-     */
     @Test
-    void testCreateTodo() throws Exception {
-        when(todoService.createTodo(Mockito.<Todo>any())).thenReturn(null);
+    void createTodo() throws Exception {
+        Todo todo6 = new Todo("new title", "new description", false);
+        String todoJson = gson.toJson(todo6);
 
-        Todo todo = new Todo();
-        todo.setCompleted(true);
-        todo.setDescription("The characteristics of someone or something");
-        todo.setId(1L);
-        todo.setTitle("Dr");
-        String content = (new ObjectMapper()).writeValueAsString(todo);
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(content);
-        MockMvcBuilders.standaloneSetup(todoController)
-                .build()
-                .perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders.post("/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(todoJson.toString()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value(todo6.getTitle()));
+
     }
 
-    /**
-     * Method under test: {@link TodoController#createTodo(Todo)}
-     */
     @Test
-    void testCreateTodo2() throws Exception {
-        when(todoService.createTodo(Mockito.<Todo>any())).thenReturn(null);
+    void updateTodo() throws Exception {
+        Todo todo6 = new Todo("new title", "new description", false);
+        String todoJson = gson.toJson(todo6);
 
-        Todo todo = new Todo();
-        todo.setCompleted(true);
-        todo.setDescription("");
-        todo.setId(1L);
-        todo.setTitle("Dr");
-        String content = (new ObjectMapper()).writeValueAsString(todo);
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(content);
-        ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(todoController).build().perform(requestBuilder);
-        actualPerformResult.andExpect(MockMvcResultMatchers.status().is(400));
+        mockMvc.perform(MockMvcRequestBuilders.put("/3")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(todoJson.toString()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value(todo6.getTitle()));
+
     }
 
-    /**
-     * Method under test: {@link TodoController#updateTodo(Long, Todo)}
-     */
     @Test
-    void testUpdateTodo() throws Exception {
-        when(todoService.updateTodo(Mockito.<Long>any(), Mockito.<Todo>any())).thenReturn(null);
-
-        Todo todo = new Todo();
-        todo.setCompleted(true);
-        todo.setDescription("The characteristics of someone or something");
-        todo.setId(1L);
-        todo.setTitle("Dr");
-        String content = (new ObjectMapper()).writeValueAsString(todo);
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put("/{id}", 1L)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(content);
-        MockMvcBuilders.standaloneSetup(todoController)
-                .build()
-                .perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-    /**
-     * Method under test: {@link TodoController#deleteTodo(Long)}
-     */
-    @Test
-    void testDeleteTodo() throws Exception {
-        when(todoService.deleteTodo(Mockito.<Long>any())).thenReturn(null);
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/{id}", 1L);
-        MockMvcBuilders.standaloneSetup(todoController)
-                .build()
-                .perform(requestBuilder)
+    void deleteTodo() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/1")
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 }
