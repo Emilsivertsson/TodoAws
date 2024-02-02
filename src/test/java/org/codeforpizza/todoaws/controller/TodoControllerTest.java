@@ -1,111 +1,132 @@
 package org.codeforpizza.todoaws.controller;
 
-
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
-
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
-import java.util.List;
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
-import io.restassured.parsing.Parser;
-import io.restassured.response.Response;
-
-import io.restassured.parsing.Parser;
-import lombok.extern.slf4j.Slf4j;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.codeforpizza.todoaws.models.Todo;
-import org.codeforpizza.todoaws.repository.TodoRepository;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
+import org.codeforpizza.todoaws.service.TodoService;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.utility.DockerImageName;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-@Slf4j
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ContextConfiguration(classes = {TodoController.class, TodoService.class})
+@ExtendWith(SpringExtension.class)
 class TodoControllerTest {
-
-    @LocalServerPort
-    private int port;
-
-    static MySQLContainer mySQLContainer = new MySQLContainer<>(DockerImageName.parse("mysql:8.0-debian"));
-
-
-
-    @BeforeAll
-    static void beforeAll() {
-        mySQLContainer.start();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        mySQLContainer.stop();
-    }
-
-    @DynamicPropertySource
-    static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", mySQLContainer::getJdbcUrl);
-        registry.add("spring.datasource.username", mySQLContainer::getUsername);
-        registry.add("spring.datasource.password", mySQLContainer::getPassword);
-        registry.add("spring.jpa.hibernate.ddl-auto", () -> "create");
-    }
-
     @Autowired
-    private TodoRepository todoRepository;
+    private TodoController todoController;
 
-
-
-    @BeforeEach
-    void setUp() {
-        RestAssured.baseURI = "http://localhost:" + port;
-        todoRepository.deleteAll();
-        List<Todo> todos = List.of(
-                new Todo(1L, "First title", "First description", false),
-                new Todo(2L, "Second title", "Second description", true),
-                new Todo(3L, "Third title", "Third description", false),
-                new Todo(4L, "Fourth title", "Fourth description", true),
-                new Todo(5L, "Fifth title", "Fifth description", false)
-        );
-        todoRepository.saveAll(todos);
-
-    }
-
+    /**
+     * Method under test: {@link TodoController#createTodo(Todo)}
+     */
     @Test
-    void getAllTodos() {
-
-        RestAssured.defaultParser = Parser.JSON;
-
-        given()
-                .contentType(ContentType.JSON)
-                .when()
-                .get("/")
-                .then()
-                .statusCode(400);
-
+    void testCreateTodo() throws Exception {
+        Todo todo = new Todo();
+        todo.setCompleted(true);
+        todo.setDescription("The characteristics of someone or something");
+        todo.setId(1L);
+        todo.setTitle("Dr");
+        String content = (new ObjectMapper()).writeValueAsString(todo);
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content);
+        ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(todoController).build().perform(requestBuilder);
+        actualPerformResult.andExpect(MockMvcResultMatchers.status().is(400));
     }
 
+    /**
+     * Method under test: {@link TodoController#deleteTodo(Long)}
+     */
     @Test
-    void getOneTodo() {
-        Todo todo = new Todo(1L, "First title", "First description", false);
-        log.info(todoRepository.save(todo).toString());
-
-        RestAssured.defaultParser = Parser.JSON;
-
-        given()
-                .contentType(ContentType.JSON)
-                .when()
-                .get("/1")
-                .then()
-                .statusCode(400);
-
+    void testDeleteTodo() throws Exception {
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/{id}", 1L);
+        ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(todoController).build().perform(requestBuilder);
+        actualPerformResult.andExpect(MockMvcResultMatchers.status().is(400));
     }
 
+    /**
+     * Method under test: {@link TodoController#deleteTodo(Long)}
+     */
+    @Test
+    void testDeleteTodo2() throws Exception {
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/{id}", 1L);
+        requestBuilder.contentType("https://example.org/example");
+        ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(todoController).build().perform(requestBuilder);
+        actualPerformResult.andExpect(MockMvcResultMatchers.status().is(400));
+    }
+
+    /**
+     * Method under test: {@link TodoController#getAllTodos()}
+     */
+    @Test
+    void testGetAllTodos() throws Exception {
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/");
+        ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(todoController).build().perform(requestBuilder);
+        actualPerformResult.andExpect(MockMvcResultMatchers.status().is(400));
+    }
+
+    /**
+     * Method under test: {@link TodoController#getAllTodos()}
+     */
+    @Test
+    void testGetAllTodos2() throws Exception {
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/");
+        requestBuilder.contentType("https://example.org/example");
+        ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(todoController).build().perform(requestBuilder);
+        actualPerformResult.andExpect(MockMvcResultMatchers.status().is(400));
+    }
+
+    /**
+     * Method under test: {@link TodoController#getOneTodo(Long)}
+     */
+    @Test
+    void testGetOneTodo() throws Exception {
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/{id}", 1L);
+        ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(todoController).build().perform(requestBuilder);
+        actualPerformResult.andExpect(MockMvcResultMatchers.status().is(400));
+    }
+
+    /**
+     * Method under test: {@link TodoController#getOneTodo(Long)}
+     */
+    @Test
+    void testGetOneTodo2() throws Exception {
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/{id}", "", "Uri Variables");
+        ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(todoController).build().perform(requestBuilder);
+        actualPerformResult.andExpect(MockMvcResultMatchers.status().is(400));
+    }
+
+    /**
+     * Method under test: {@link TodoController#getOneTodo(Long)}
+     */
+    @Test
+    void testGetOneTodo3() throws Exception {
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/{id}", 1L);
+        requestBuilder.contentType("https://example.org/example");
+        ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(todoController).build().perform(requestBuilder);
+        actualPerformResult.andExpect(MockMvcResultMatchers.status().is(400));
+    }
+
+    /**
+     * Method under test: {@link TodoController#updateTodo(Long, Todo)}
+     */
+    @Test
+    void testUpdateTodo() throws Exception {
+        Todo todo = new Todo();
+        todo.setCompleted(true);
+        todo.setDescription("The characteristics of someone or something");
+        todo.setId(1L);
+        todo.setTitle("Dr");
+        String content = (new ObjectMapper()).writeValueAsString(todo);
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put("/{id}", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content);
+        ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(todoController).build().perform(requestBuilder);
+        actualPerformResult.andExpect(MockMvcResultMatchers.status().is(400));
+    }
 }
