@@ -90,4 +90,16 @@ public class TodoService {
             return ResponseEntity.status(400).build();
         }
     }
+
+    public ResponseEntity<Todo> toggleComplete(Long id) {
+        try {
+            Todo todo = todoRepository.findById(id).orElseThrow(() -> new RuntimeException("Todo not found"));
+            todo.setCompleted(!todo.getCompleted());
+            log.info("Toggle completed successfully");
+            return ResponseEntity.ok(todoRepository.save(todo));
+        } catch (Exception e) {
+            log.info("Error completing todo");
+            return ResponseEntity.status(400).build();
+        }
+    }
 }
