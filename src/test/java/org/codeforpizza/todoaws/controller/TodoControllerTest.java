@@ -1,87 +1,152 @@
 package org.codeforpizza.todoaws.controller;
 
+import io.restassured.RestAssured;
 import org.codeforpizza.todoaws.models.Todo;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.codeforpizza.todoaws.repository.TodoRepository;
+import org.codeforpizza.todoaws.service.TodoService;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import com.google.gson.Gson;
-import java.util.Arrays;
-import java.util.List;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.MySQLContainer;
 
-@ExtendWith({SpringExtension.class, MockitoExtension.class})
-@SpringBootTest
-@AutoConfigureMockMvc
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class TodoControllerTest {
 
+    @LocalServerPort
+    private int port;
+
+    static MySQLContainer mySQLContainer = new MySQLContainer("mysql:8.0.26");
+
+    @BeforeAll
+    static void beforeAll() {
+        mySQLContainer.start();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        mySQLContainer.stop();
+    }
+
+    @DynamicPropertySource
+    static void setDatasourceProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", mySQLContainer::getJdbcUrl);
+        registry.add("spring.datasource.username", mySQLContainer::getUsername);
+        registry.add("spring.datasource.password", mySQLContainer::getPassword);
+    }
 
     @Autowired
-    private MockMvc mockMvc;
+    private TodoService todoService;
 
-    Gson gson = new Gson();
-
-    Todo todo1 = new Todo(1L, "First title", "First description", false);
-    Todo todo2 = new Todo(2L, "Second title", "Second description", true);
-    Todo todo3 = new Todo(3L, "Third title", "Third description", false);
-    Todo todo4 = new Todo(4L, "Fourth title", "Fourth description", true);
-    Todo todo5 = new Todo(5L, "Fifth title", "Fifth description", false);
+    @Autowired
+    private  TodoRepository todoRepository;
 
 
-    @Test
-    void getAllTodos() throws Exception {
-        List<Todo> todos = Arrays.asList(todo1, todo2, todo3, todo4, todo5);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(todos.size()));
+    @BeforeEach
+    void setUp() {
+        RestAssured.baseURI = "http://localhost:" + port;
+        Todo todo1 = new Todo("First title", "First description", false);
+        Todo todo2 = new Todo("Second title", "Second description", true);
+        todoRepository.save(todo1);
+        todoRepository.save(todo2);
+        System.out.println(todoRepository.findAll());
+    }
+
+    @AfterEach
+    void tearDown() {
     }
 
     @Test
-    void getOneTodo() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/1")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value(todo1.getTitle()));
+    @Order(1)
+    void AshouldGetAllTodos() {
+        given()
+                .contentType("application/json")
+                .when()
+                .get("/todos")
+                .then()
+                .statusCode(200)
+                .body("$", hasSize(2));
     }
 
     @Test
-    void createTodo() throws Exception {
-        Todo todo6 = new Todo("new title", "new description", false);
-        String todoJson = gson.toJson(todo6);
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(todoJson.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value(todo6.getTitle()));
-
+    @Order(2)
+    void BshouldGetOneTodo() {
+        given()
+                .contentType("application/json")
+                .when()
+                .get("/todos/1")
+                .then()
+                .statusCode(200)
+                .body("title", equalTo("First title"));
     }
 
     @Test
-    void updateTodo() throws Exception {
-        Todo todo6 = new Todo("new title", "new description", false);
-        String todoJson = gson.toJson(todo6);
+    @Order(3)
+    void CshouldCreateTodo() {
+        Todo todo1 = new Todo();
+        todo1.setTitle("new title");
+        todo1.setDescription("new description");
+        todo1.setCompleted(false);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/3")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(todoJson.toString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.title").value(todo6.getTitle()));
-
+        given()
+                .contentType("application/json")
+                .body(todo1)
+                .when()
+                .post("/todos")
+                .then()
+                .statusCode(200)
+                .body("title", equalTo("new title"));
     }
 
     @Test
-    void deleteTodo() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/1")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+    @Order(4)
+    void DshouldUpdateTodo() {
+        Todo todoUpdated = new Todo();
+        todoUpdated.setTitle("Updated title");
+        todoUpdated.setDescription("Updated description");
+        todoUpdated.setCompleted(true);
+
+        given()
+                .contentType("application/json")
+                .body(todoUpdated)
+                .when()
+                .put("/todos/1")
+                .then()
+                .statusCode(200)
+                .body("title", equalTo("Updated title"));
     }
+
+    @Test
+    @Order(5)
+    void EshouldToggleTodoCompleted() {
+        given()
+                .contentType("application/json")
+                .when()
+                .put("/todos/complete/1")
+                .then()
+                .statusCode(200)
+                .body("completed", equalTo(false));
+    }
+
+    @Test
+    @Order(6)
+    void FshouldDeleteTodo() {
+        given()
+                .contentType("application/json")
+                .when()
+                .delete("/todos/1")
+                .then()
+                .statusCode(200)
+                .body(equalTo("Todo deleted successfully"));
+    }
+
 }
