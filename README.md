@@ -1,8 +1,8 @@
 # Todo App
 
 ### Description
-This is the backend for a school-assignment. The frontend is a simple todo-app that can be found [here]. \
-The backend is a Springboot REST API that uses a AWS RDS database to store the todos.\
+This is the backend for a school-assignment. The frontend is a simple todo-app that can be found [here](https://github.com/Emilsivertsson/Vue3Crud). \
+The backend is a Springboot REST API that uses an AWS RDS database to store the todos.
 
 
 ### What was your motivation?
@@ -20,45 +20,40 @@ Run the application, and it will start on port 8080.
 
 ### Usage
 when the application is running, you can use the following end-points to interact with the application:
-- GET /todos
-- GET /todos/{id}
-- POST /todos
-- PUT /todos/{id}
-- DELETE /todos/{id}
-- PUT /todos/completed/{id}
+- GET /todos : will return all todos
+- GET /todos/{id} : will return a single todo with the given id
+- POST /todos : will create a new todo with the given body
+    ```json
+    {
+        "title": "This is the title",
+        "description": "Random Long description",
+        "completed": false
+    }
+    ```  
+- PUT /todos/{id} : will update the todo with the given id with the given body
+    ```json
+    {
+        "title": "This is another title",
+        "description": "Second Long description",
+        "completed": false
+    }
+    ```
+- DELETE /todos/{id} : will delete the todo with the given id
+- PUT /todos/completed/{id} : will toggle the completed status of the todo with the given id
 
-you may test the end-points using Postman using the Collection in the Postman-folder.
-The collection contains examples of how to use the end-points, but you may also read the documentation in the link.
-
-
-To add a screenshot, create an assets/images folder in your repository and upload your screenshot to it. Then, using the relative filepath, add it to your README using the following syntax:
-
-```md
-![alt text](assets/images/screenshot.png)
-```
-### Credits
-List your collaborators, if any, with links to their GitHub profiles.
-
-member 1
-member 2
-If you used any third-party assets that require attribution, list the creators with links to their primary web presence in this section.
-
-junit jupiter 5
-If you followed tutorials, include links to those here as well.
+You may test the end-points using Postman using the Collection in the Postman-folder. The collection contains examples of how to use the end-points.
 
 ### License
-The last section of a high-quality README file is the license. This lets other developers know what they can and cannot do with your project. If you need help choosing a license, refer to MIT License.
-
+MIT License
 
 ### Features
-the end-points allow for the following:
-- get all todos
-- get a single todo
-- create a todo
-- update a todo
-- delete a todo
-- toggle a todo as done or not done
-
+The end-points allow for the following:
+- Get all todos
+- Get a single todo
+- Create a todo
+- Update a todo
+- Delete a todo
+- Toggle a todo as done or not done
 
 ### Tests
-Go the extra mile and write tests for your application. Then provide examples on how to run them here.
+

@@ -1,92 +1,129 @@
 package org.codeforpizza.todoaws.service;
 
+import io.restassured.RestAssured;
 import org.codeforpizza.todoaws.models.Todo;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.codeforpizza.todoaws.repository.TodoRepository;
+import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.ResponseEntity;
-import java.util.Arrays;
-import java.util.List;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.MySQLContainer;
 
-@SpringBootTest
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class TodoServiceTest {
 
+    @LocalServerPort
+    private int port;
 
-    @Mock
+    static MySQLContainer mySQLContainer = new MySQLContainer("mysql:8.0.26");
+
+    @BeforeAll
+    static void beforeAll() {
+        mySQLContainer.start();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        mySQLContainer.stop();
+    }
+
+    @DynamicPropertySource
+    static void setDatasourceProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", mySQLContainer::getJdbcUrl);
+        registry.add("spring.datasource.username", mySQLContainer::getUsername);
+        registry.add("spring.datasource.password", mySQLContainer::getPassword);
+    }
+
+    @Autowired
     private TodoService todoService;
 
-    Todo todo1 = new Todo(1L,"First title", "First description", false);
-    Todo todo2 = new Todo(2L,"Second title", "Second description", true);
-    Todo todo3 = new Todo(3L,"Third title", "Third description", false);
-    Todo todo4 = new Todo(4L,"Fourth title", "Fourth description", true);
-    Todo todo5 = new Todo(5L,"Fifth title", "Fifth description", false);
+    @Autowired
+    private TodoRepository todoRepository;
 
 
 
     @BeforeEach
     void setUp() {
-        todoService = Mockito.mock(TodoService.class);
-
-
+        RestAssured.baseURI = "http://localhost:" + port;
+        Todo todo1 = new Todo("First title", "First description", false);
+        Todo todo2 = new Todo("Second title", "Second description", true);
+        todoRepository.save(todo1);
+        todoRepository.save(todo2);
+        System.out.println(todoRepository.findAll());
     }
 
+    @AfterEach
+    void tearDown() {
+    }
 
     @Test
-    @DisplayName("1.Get all todos")
+    @Order(1)
     void getAllTodos() {
-        List<Todo> todos = Arrays.asList(todo1, todo2, todo3, todo4, todo5);
+        Todo todo1 = new Todo(1L,"First title", "First description", false);
+        Todo todo2 = new Todo(2L,"Second title", "Second description", true);
+        List<Todo> expectedtodos = List.of(todo1, todo2);
 
-        when(todoService.getAllTodos()).thenReturn(ResponseEntity.ok(todos));
-        ResponseEntity<List<Todo>> response = todoService.getAllTodos();
+        List<Todo> actualltodos = todoService.getAllTodos().getBody();
 
-        assertEquals(5, response.getBody().size());
-
+        assertEquals(expectedtodos.size(), actualltodos.size());
     }
+
     @Test
-    @DisplayName("2.Get one todo")
+    @Order(2)
     void getOneTodo() {
-        when(todoService.getOneTodo(1L)).thenReturn(ResponseEntity.ok(todo1));
-        Todo fromdb = todoService.getOneTodo(1L).getBody();
-
-        assertEquals(todo1.getTitle(), fromdb.getTitle());
+        Todo todo1 = new Todo("First title", "First description", false);
+        todoRepository.save(todo1);
+        Todo expectedTodo = todo1;
+        Todo actualTodo = todoService.getOneTodo(1L).getBody();
+        assertEquals(expectedTodo.getTitle(), actualTodo.getTitle());
     }
 
     @Test
-    @DisplayName("5.Delete todo")
-    void deleteTodo() {
-        when(todoService.deleteTodo (1L)).thenReturn(ResponseEntity.ok("Todo deleted"));
-        String response = todoService.deleteTodo (1L).getBody();
-
-        assertEquals("Todo deleted", response);
-    }
-
-
-    @Test
-    @DisplayName("4.Update todo")
-    void updateTodo() {
-        when(todoService.getOneTodo(3L)).thenReturn(ResponseEntity.ok(todo3));
-        Todo todoUpdated = new Todo(3L,"Third title", "Third description", false);
-        when(todoService.updateTodo (3L, todo3)).thenReturn(ResponseEntity.ok(todoUpdated));
-
-        Todo todo = todoService.getOneTodo(3L).getBody();
-        todo.setTitle("Updated title");
-        todoService.updateTodo(3L, todo);
-        Todo todo1 = todoService.getOneTodo(3L).getBody();
-        assertEquals(todo.getTitle(), todo1.getTitle());
-    }
-
-    @Test
-    @DisplayName("3.Create todo")
+    @Order(3)
     void createTodo() {
-        when(todoService.getOneTodo(6L)).thenReturn(ResponseEntity.ok(todo1));
-        Todo todo = new Todo("First title", "New description", false);
-        todoService.createTodo(todo);
-        Todo todofromdb = todoService.getOneTodo(6L).getBody();
-        assertEquals(todo.getTitle(), todofromdb.getTitle());
+        Todo todo = new Todo("Third title", "Third description", false);
+        Todo expectedTodo = todo;
+        Todo actualTodo = todoService.createTodo(todo).getBody();
+        assertEquals(expectedTodo.getTitle(), actualTodo.getTitle());
     }
+
+    @Test
+    @Order(4)
+    void updateTodo() {
+        Todo todo = new Todo(1L, "First title", "First description", false);
+        Todo expectedTodo = todo;
+        Todo actualTodo = todoService.updateTodo(1L, todo).getBody();
+        assertEquals(expectedTodo.getTitle(), actualTodo.getTitle());
+    }
+
+    @Test
+    @Order(5)
+    void toggleTodo() {
+        Todo todo = new Todo(1L, "First title", "First description", false);
+        Todo expectedTodo = todo;
+        Todo actualTodo = todoService.toggleComplete(1L).getBody();
+        assertNotEquals(expectedTodo.getCompleted(), actualTodo.getCompleted());
+    }
+
+    @Test
+    @Order(6)
+    void deleteTodo() {
+        List<Todo> todos = todoService.getAllTodos().getBody();
+        todoService.deleteTodo(1L);
+        assertNotEquals(todoRepository.findAll().size(), todos.size());
+    }
+
+
+
+
+
+
 }
