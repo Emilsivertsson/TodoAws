@@ -1,31 +1,42 @@
-# Todo 
+# Todo App
 
 ### Description
-Provide a short description explaining the what, why, and how of your project. Use the following questions as a guide:
+This is the backend for a school-assignment. The frontend is a simple todo-app that can be found [here]. \
+The backend is a Springboot REST API that uses a AWS RDS database to store the todos.\
 
-What was your motivation?
-Why did you build this project? (Note: the answer is not "Because it was a homework assignment.")
-What problem does it solve?
-What did you learn?
-Table of Contents (Optional)
-If your README is long, add a table of contents to make it easy for users to find what they need.
 
-Installation
-Usage
-Credits
-License
-Installation
-What are the steps required to install your project? Provide a step-by-step description of how to get the development environment running.
+### What was your motivation?
+The assigment was to create a Springboot application with a Ci/CD pipeline onto AWS. The application should be a REST API that uses a AWS RDS database to store data.
+I chose to make the application a todo-app because it is a simple application that can be used to demonstrate the basic CRUD operations.
 
-Usage
-Provide instructions and examples for use. Include screenshots as needed.
+
+### Installation
+To install the project, you need to have the following installed:
+- Java 17
+
+Clone the repository and open it in your favorite IDE.\
+Run the application, and it will start on port 8080.
+
+
+### Usage
+when the application is running, you can use the following end-points to interact with the application:
+- GET /todos
+- GET /todos/{id}
+- POST /todos
+- PUT /todos/{id}
+- DELETE /todos/{id}
+- PUT /todos/completed/{id}
+
+you may test the end-points using Postman using the Collection in the Postman-folder.
+The collection contains examples of how to use the end-points, but you may also read the documentation in the link.
+
 
 To add a screenshot, create an assets/images folder in your repository and upload your screenshot to it. Then, using the relative filepath, add it to your README using the following syntax:
 
 ```md
 ![alt text](assets/images/screenshot.png)
 ```
-Credits
+### Credits
 List your collaborators, if any, with links to their GitHub profiles.
 
 member 1
@@ -35,21 +46,19 @@ If you used any third-party assets that require attribution, list the creators w
 junit jupiter 5
 If you followed tutorials, include links to those here as well.
 
-License
+### License
 The last section of a high-quality README file is the license. This lets other developers know what they can and cannot do with your project. If you need help choosing a license, refer to MIT License.
 
-🏆 The previous sections are the bare minimum, and your project will ultimately determine the content of this document. You might also want to consider adding the following sections.
 
-Badges
-badmath
+### Features
+the end-points allow for the following:
+- get all todos
+- get a single todo
+- create a todo
+- update a todo
+- delete a todo
+- toggle a todo as done or not done
 
-Badges aren't necessary, per se, but they demonstrate street cred. Badges let other developers know that you know what you're doing. Check out the badges hosted by shields.io. You may not understand what they all represent now, but you will in time.
 
-Features
-If your project has a lot of features, list them here.
-
-How to Contribute
-If you created an application or package and would like other developers to contribute it, you can include guidelines for how to do so. The Contributor Covenant is an industry standard, but you can always write your own if you'd prefer.
-
-Tests
+### Tests
 Go the extra mile and write tests for your application. Then provide examples on how to run them here.
