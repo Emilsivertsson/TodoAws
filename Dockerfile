@@ -1,5 +1,5 @@
 FROM openjdk:17
-LABEL maintainer="BankTDDMaven"
+LABEL maintainer="todoaws"
 
 COPY /target/TodoAws-0.0.1-SNAPSHOT.jar TodoAws-0.0.1-SNAPSHOT.jar
 
