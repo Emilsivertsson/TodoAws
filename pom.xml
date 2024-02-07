@@ -116,6 +116,7 @@
                 </configuration>
             </plugin>
         </plugins>
+        <finalName>TodoAws-0.0.1-SNAPSHOT</finalName>
     </build>
 
 </project>
