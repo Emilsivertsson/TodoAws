@@ -35,7 +35,7 @@ public class TodoController {
 
     @GetMapping("/{id}")
     public ResponseEntity <Todo> getOneTodo (@PathVariable Long id) {
-        log.info("Getting one todo");
+        log.info("Getting only one todo");
         try {
             return todoService.getOneTodo(id);
         } catch (Exception e) {
