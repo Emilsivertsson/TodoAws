@@ -56,4 +56,5 @@ The end-points allow for the following:
 - Toggle a todo as done or not done
 
 ### Tests
-
+The tests run with Testcontainers and JUnit5. The tests are integration tests that test the end-points and the database.
+To be able to run them, you must have a docker daemon running on your machine, like Docker Desktop.

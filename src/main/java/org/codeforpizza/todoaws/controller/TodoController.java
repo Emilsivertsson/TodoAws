@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * The TodoController class is a REST controller that handles requests.
+ * It is responsible for handling requests for creating, reading, updating, and deleting todos.
+ */
 @RestController
 @RequestMapping("/todos")
 @RequiredArgsConstructor

@@ -69,11 +69,12 @@ class TodoServiceTest {
     void getAllTodos() {
         Todo todo1 = new Todo(1L,"First title", "First description", false);
         Todo todo2 = new Todo(2L,"Second title", "Second description", true);
-        List<Todo> expectedtodos = List.of(todo1, todo2);
+        List<Todo> expectedTodos = List.of(todo1, todo2);
 
-        List<Todo> actualltodos = todoService.getAllTodos().getBody();
+        List<Todo> actualTodos = todoService.getAllTodos().getBody();
 
-        assertEquals(expectedtodos.size(), actualltodos.size());
+        assert actualTodos != null;
+        assertEquals(expectedTodos.size(), actualTodos.size());
     }
 
     @Test
@@ -81,9 +82,9 @@ class TodoServiceTest {
     void getOneTodo() {
         Todo todo1 = new Todo("First title", "First description", false);
         todoRepository.save(todo1);
-        Todo expectedTodo = todo1;
         Todo actualTodo = todoService.getOneTodo(1L).getBody();
-        assertEquals(expectedTodo.getTitle(), actualTodo.getTitle());
+        assert actualTodo != null;
+        assertEquals(todo1.getTitle(), actualTodo.getTitle());
     }
 
 
@@ -92,27 +93,27 @@ class TodoServiceTest {
     @Order(3)
     void createTodo() {
         Todo todo = new Todo("Third title", "Third description", false);
-        Todo expectedTodo = todo;
         Todo actualTodo = todoService.createTodo(todo).getBody();
-        assertEquals(expectedTodo.getTitle(), actualTodo.getTitle());
+        assert actualTodo != null;
+        assertEquals(todo.getTitle(), actualTodo.getTitle());
     }
 
     @Test
     @Order(4)
     void updateTodo() {
         Todo todo = new Todo(1L, "First title", "First description", false);
-        Todo expectedTodo = todo;
         Todo actualTodo = todoService.updateTodo(1L, todo).getBody();
-        assertEquals(expectedTodo.getTitle(), actualTodo.getTitle());
+        assert actualTodo != null;
+        assertEquals(todo.getTitle(), actualTodo.getTitle());
     }
 
     @Test
     @Order(5)
     void toggleTodo() {
         Todo todo = new Todo(1L, "First title", "First description", false);
-        Todo expectedTodo = todo;
         Todo actualTodo = todoService.toggleComplete(1L).getBody();
-        assertNotEquals(expectedTodo.getCompleted(), actualTodo.getCompleted());
+        assert actualTodo != null;
+        assertNotEquals(todo.getCompleted(), actualTodo.getCompleted());
     }
 
     @Test
@@ -120,12 +121,7 @@ class TodoServiceTest {
     void deleteTodo() {
         List<Todo> todos = todoService.getAllTodos().getBody();
         todoService.deleteTodo(1L);
+        assert todos != null;
         assertNotEquals(todoRepository.findAll().size(), todos.size());
     }
-
-
-
-
-
-
 }

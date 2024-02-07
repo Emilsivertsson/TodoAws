@@ -10,6 +10,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * The TodoService class is a service that handles business logic.
+ * It is responsible for handling requests for creating, reading, updating, and deleting todos.
+ */
+
 @Service
 @Transactional
 @Slf4j
@@ -64,7 +69,6 @@ public class TodoService {
             log.info("Error deleting todo");
             return ResponseEntity.status(400).build();
         }
-
     }
 
     public ResponseEntity<Todo> updateTodo(Long id, Todo todo) {
