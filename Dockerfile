@@ -1,8 +1,8 @@
 FROM openjdk:17
 LABEL maintainer="BankTDDMaven"
 
-COPY /target/TodoAws.jar todoaws.jar
+COPY /target/TodoAws-0.0.1-SNAPSHOT.jar todoaws.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java","-jar","todoAWS.jar"]
+ENTRYPOINT ["java","-jar","todoaws.jar"]
