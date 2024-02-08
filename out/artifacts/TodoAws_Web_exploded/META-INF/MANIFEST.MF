@@ -1,0 +1,36 @@
+Manifest-Version: 1.0
+Created-By: IntelliJ IDEA
+Built-By: emils
+Build-Jdk: JetBrains Runtime version 17.0.5
+Implementation-Title: TodoAws
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: org.codeforpizza
+Main-Class: org.example.Main
+Class-Path: spring-boot-starter-data-jpa-3.2.2.jar spring-boot-starter-a
+ op-3.2.2.jar spring-aop-6.1.3.jar aspectjweaver-1.9.21.jar spring-boot-
+ starter-jdbc-3.2.2.jar HikariCP-5.0.1.jar spring-jdbc-6.1.3.jar hiberna
+ te-core-6.4.1.Final.jar jakarta.persistence-api-3.1.0.jar jakarta.trans
+ action-api-2.0.1.jar jboss-logging-3.5.3.Final.jar hibernate-commons-an
+ notations-6.0.6.Final.jar jandex-3.1.2.jar classmate-1.6.0.jar byte-bud
+ dy-1.14.11.jar jaxb-runtime-4.0.4.jar jaxb-core-4.0.4.jar angus-activat
+ ion-2.0.1.jar txw2-4.0.4.jar istack-commons-runtime-4.1.2.jar jakarta.i
+ nject-api-2.0.1.jar antlr4-runtime-4.13.0.jar spring-data-jpa-3.2.2.jar
+  spring-data-commons-3.2.2.jar spring-orm-6.1.3.jar spring-context-6.1.
+ 3.jar spring-tx-6.1.3.jar spring-beans-6.1.3.jar jakarta.annotation-api
+ -2.1.1.jar slf4j-api-2.0.11.jar spring-aspects-6.1.3.jar spring-boot-st
+ arter-web-3.2.2.jar spring-boot-starter-3.2.2.jar spring-boot-3.2.2.jar
+  spring-boot-autoconfigure-3.2.2.jar spring-boot-starter-logging-3.2.2.
+ jar logback-classic-1.4.14.jar logback-core-1.4.14.jar log4j-to-slf4j-2
+ .21.1.jar log4j-api-2.21.1.jar jul-to-slf4j-2.0.11.jar snakeyaml-2.2.ja
+ r spring-boot-starter-json-3.2.2.jar jackson-databind-2.15.3.jar jackso
+ n-annotations-2.15.3.jar jackson-core-2.15.3.jar jackson-datatype-jdk8-
+ 2.15.3.jar jackson-datatype-jsr310-2.15.3.jar jackson-module-parameter-
+ names-2.15.3.jar spring-boot-starter-tomcat-3.2.2.jar tomcat-embed-core
+ -10.1.18.jar tomcat-embed-websocket-10.1.18.jar spring-web-6.1.3.jar mi
+ crometer-observation-1.12.2.jar micrometer-commons-1.12.2.jar spring-we
+ bmvc-6.1.3.jar spring-expression-6.1.3.jar mysql-connector-j-8.3.0.jar 
+ lombok-1.18.30.jar jakarta.xml.bind-api-4.0.1.jar jakarta.activation-ap
+ i-2.1.2.jar spring-core-6.1.3.jar spring-jcl-6.1.3.jar spring-boot-star
+ ter-validation-3.2.2.jar tomcat-embed-el-10.1.18.jar hibernate-validato
+ r-8.0.1.Final.jar jakarta.validation-api-3.0.2.jar gson-2.10.1.jar
+
