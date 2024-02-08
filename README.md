@@ -13,8 +13,10 @@ I chose to make the application a todo-app because it is a simple application th
 ### Installation
 To install the project, you need to have the following installed:
 - Java 17
+- docker desktop
 
 Clone the repository and open it in your favorite IDE.\
+You should have docker desktop installed running on your machine.\
 Run the application, and it will start on port 8080.
 
 
