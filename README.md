@@ -22,6 +22,9 @@ Run the application, and it will start on port 8080.
 
 
 ### Usage
+The password for the RDS database is stored in properties file.\
+there is no need to additionally configure the application.\
+
 when the application is running, you can use the following end-points to interact with the application:
 - GET /todos : will return all todos
 - GET /todos/{id} : will return a single todo with the given id
