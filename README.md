@@ -1,5 +1,15 @@
 # Todo App
 
+### Table of Contents
+- [description](#Description)
+- [motivation](#What-was-your-motivation)
+- [installation](#Installation)
+- [usage](#Usage)
+- [ci/cd pipeline](#Ci/CD-pipeline)
+- [license](#License)
+- [features](#Features)
+- [tests](#Tests)
+
 ### Description
 This is the backend for a school-assignment. The frontend is a simple todo-app that can be found [here](https://github.com/Emilsivertsson/Vue3Crud). \
 The backend is a Springboot REST API that uses an AWS RDS database to store the todos.
