@@ -61,7 +61,7 @@ After the build is done, the applications is updated on the Elastic Beanstalk en
 <p align="center">
   <img src="screenshots/pipe.jpg" alt="pipeline" />
   <img src="screenshots/Build.jpg" alt="build process">
-  <img src="screenshots/beanstalk.jpg" alt="beanstalk enviroment">
+  <img src="screenshots/beanstalk.jpg" alt="beanstalk environment">
   <img src="screenshots/webshop.jpg" alt="RDS database"></p>
 
 ### License
