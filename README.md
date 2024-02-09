@@ -64,6 +64,7 @@ After the build is done, the applications is updated on the Elastic Beanstalk en
   <img src="screenshots/beanstalk.jpg" alt="beanstalk environment">
   <img src="screenshots/webshop.jpg" alt="RDS database"></p>
 
+
 ### License
 MIT License
 
