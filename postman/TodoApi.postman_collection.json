@@ -29,18 +29,17 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/info?id=1",
+							"raw": "http://spring17-env.eba-hp22cqpp.eu-north-1.elasticbeanstalk.com/todos",
+							"protocol": "http",
 							"host": [
-								"{{base_url}}"
+								"spring17-env",
+								"eba-hp22cqpp",
+								"eu-north-1",
+								"elasticbeanstalk",
+								"com"
 							],
 							"path": [
-								"info"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "1"
-								}
+								"todos"
 							]
 						},
 						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
@@ -123,18 +122,18 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/info?id=1",
+							"raw": "http://spring17-env.eba-hp22cqpp.eu-north-1.elasticbeanstalk.com/todos/1",
+							"protocol": "http",
 							"host": [
-								"{{base_url}}"
+								"spring17-env",
+								"eba-hp22cqpp",
+								"eu-north-1",
+								"elasticbeanstalk",
+								"com"
 							],
 							"path": [
-								"info"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "1"
-								}
+								"todos",
+								"1"
 							]
 						},
 						"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
@@ -220,7 +219,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"Add your name in the body\"\n}",
+							"raw": "{\n\t\"title\": \"This is the title\",\n    \"description\": \"Random Long description\",\n    \"completed\": false\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -228,12 +227,17 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/info",
+							"raw": "http://spring17-env.eba-hp22cqpp.eu-north-1.elasticbeanstalk.com/todos",
+							"protocol": "http",
 							"host": [
-								"{{base_url}}"
+								"spring17-env",
+								"eba-hp22cqpp",
+								"eu-north-1",
+								"elasticbeanstalk",
+								"com"
 							],
 							"path": [
-								"info"
+								"todos"
 							]
 						},
 						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
@@ -327,7 +331,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"Add your name in the body\"\n}",
+							"raw": "{\n\t\"title\": \"This is the new title\",\n    \"description\": \"Random even longer description\",\n    \"completed\": true\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -335,18 +339,18 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/info?id=1",
+							"raw": "http://spring17-env.eba-hp22cqpp.eu-north-1.elasticbeanstalk.com/todos/1",
+							"protocol": "http",
 							"host": [
-								"{{base_url}}"
+								"spring17-env",
+								"eba-hp22cqpp",
+								"eu-north-1",
+								"elasticbeanstalk",
+								"com"
 							],
 							"path": [
-								"info"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "1"
-								}
+								"todos",
+								"1"
 							]
 						},
 						"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
@@ -449,18 +453,19 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/info?id=1",
+							"raw": "http://spring17-env.eba-hp22cqpp.eu-north-1.elasticbeanstalk.com/todos/complete/1",
+							"protocol": "http",
 							"host": [
-								"{{base_url}}"
+								"spring17-env",
+								"eba-hp22cqpp",
+								"eu-north-1",
+								"elasticbeanstalk",
+								"com"
 							],
 							"path": [
-								"info"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "1"
-								}
+								"todos",
+								"complete",
+								"1"
 							]
 						},
 						"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
@@ -564,18 +569,18 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/info?id=1",
+							"raw": "http://spring17-env.eba-hp22cqpp.eu-north-1.elasticbeanstalk.com/todos/1",
+							"protocol": "http",
 							"host": [
-								"{{base_url}}"
+								"spring17-env",
+								"eba-hp22cqpp",
+								"eu-north-1",
+								"elasticbeanstalk",
+								"com"
 							],
 							"path": [
-								"info"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "1"
-								}
+								"todos",
+								"1"
 							]
 						},
 						"description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code."
@@ -764,18 +769,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{base_url}}/info?id=1",
+					"raw": "localhost:5000/todos/1",
 					"host": [
-						"{{base_url}}"
+						"localhost"
 					],
+					"port": "5000",
 					"path": [
-						"info"
-					],
-					"query": [
-						{
-							"key": "id",
-							"value": "1"
-						}
+						"todos",
+						"1"
 					]
 				},
 				"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
@@ -861,7 +862,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"name\": \"Add your name in the body\"\n}",
+					"raw": "{\n\t\"title\": \"This is the title\",\n    \"description\": \"Random Long description\",\n    \"completed\": false\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -869,12 +870,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/info",
+					"raw": "localhost:5000/todos",
 					"host": [
-						"{{base_url}}"
+						"localhost"
 					],
+					"port": "5000",
 					"path": [
-						"info"
+						"todos"
 					]
 				},
 				"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
@@ -968,7 +970,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"name\": \"Add your name in the body\"\n}",
+					"raw": "{\n\t\"title\": \"This is the new title\",\n    \"description\": \"Random even longer description\",\n    \"completed\": true\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -976,18 +978,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/info?id=1",
+					"raw": "localhost:5000/todos/1",
 					"host": [
-						"{{base_url}}"
+						"localhost"
 					],
+					"port": "5000",
 					"path": [
-						"info"
-					],
-					"query": [
-						{
-							"key": "id",
-							"value": "1"
-						}
+						"todos",
+						"1"
 					]
 				},
 				"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
@@ -1090,18 +1088,15 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/info?id=1",
+					"raw": "localhost:5000/todos/complete/1",
 					"host": [
-						"{{base_url}}"
+						"localhost"
 					],
+					"port": "5000",
 					"path": [
-						"info"
-					],
-					"query": [
-						{
-							"key": "id",
-							"value": "1"
-						}
+						"todos",
+						"complete",
+						"1"
 					]
 				},
 				"description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
@@ -1205,18 +1200,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/info?id=1",
+					"raw": "localhost:5000/todos/1",
 					"host": [
-						"{{base_url}}"
+						"localhost"
 					],
+					"port": "5000",
 					"path": [
-						"info"
-					],
-					"query": [
-						{
-							"key": "id",
-							"value": "1"
-						}
+						"todos",
+						"1"
 					]
 				},
 				"description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code."
