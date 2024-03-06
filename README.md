@@ -12,8 +12,8 @@
 
 ### Description
 This is the backend for a school-assignment. The frontend is a simple todo-app that can be found [here](https://github.com/Emilsivertsson/Vue3Crud). \
-The backend is a Springboot REST API that uses an AWS RDS database to store the todos.
-The application is deployed on AWS using a CI/CD pipeline.
+The backend is a Springboot REST API that used an AWS RDS database to store the todos.
+The application was deployed on AWS using a CI/CD pipeline.
 see Ci/CD pipeline for more information.
 
 ### What was your motivation?
@@ -62,7 +62,7 @@ You may test the end-points using Postman using the Collection in the Postman-fo
 Or read the Post-man documentation [here](https://documenter.getpostman.com/view/27137666/2s9YyzcdBV)
 
 ### Ci/CD pipeline
-The application is deployed on AWS using a CI/CD pipeline. The pipeline starts with GitHub Actions, where the application is built and tested.\
+The application was deployed on AWS using a CI/CD pipeline. The pipeline starts with GitHub Actions, where the application is built and tested.\
 if the tests pass, the application is first built and pushed to a docker repository. Then packed into an Artifact.\
 AWS CodePipeline uses a webhook to listen for changes in the GitHub repository. When a change is detected, the pipeline is triggered.\
 The pipeline gets the source code from the GitHub repository and starts the build process, according to the buildspec.yml file.\
